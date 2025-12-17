@@ -29,38 +29,22 @@ from .exceptions import (
 from .sensordata.sensor_data_builder import SensorDataBuilder
 from .ssl_context_configurator.ssl_context_configurator import SSLContextConfigurator
 
-ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-ssl_context.load_default_certs()
-ssl_context.set_ciphers("TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA")
-
-SSL_SIGNATURE_ALGORITHMS = [
-    "ecdsa_secp256r1_sha256",
-    "rsa_pss_rsae_sha256",
-    "rsa_pkcs1_sha256",
-    "ecdsa_secp384r1_sha384",
-    "rsa_pss_rsae_sha384",
-    "rsa_pkcs1_sha384",
-    "rsa_pss_rsae_sha512",
-    "rsa_pkcs1_sha512",
-    "rsa_pkcs1_sha1",
-]
-with SSLContextConfigurator(ssl_context, libssl_path="libssl.so.3") as ssl_context_configurator:
-    ssl_context_configurator.configure_signature_algorithms(":".join(SSL_SIGNATURE_ALGORITHMS))
+ssl_context = ssl.create_default_context()
 
 REGION_CONFIG = {
     "MNAO": {
         "app_code": "202007270941270111799",
-        "base_url": "https://0cxo7m58.mazda.com/prod/",
+        "base_url": "https://mps.mazda.com/prod/",
         "usher_url": "https://ptznwbh8.mazda.com/appapi/v1/",
     },
     "MME": {
         "app_code": "202008100250281064816",
-        "base_url": "https://e9stj7g7.mazda.com/prod/",
+        "base_url": "https://mps.eu.mazda.com/prod/",
         "usher_url": "https://rz97suam.mazda.com/appapi/v1/",
     },
     "MJO": {
         "app_code": "202009170613074283422",
-        "base_url": "https://wcs9p6wj.mazda.com/prod/",
+        "base_url": "https://mps.jp.mazda.com/prod/",
         "usher_url": "https://c5ulfwxr.mazda.com/appapi/v1/",
     },
 }
@@ -68,10 +52,10 @@ REGION_CONFIG = {
 IV = "0102030405060708"
 SIGNATURE_MD5 = "C383D8C4D279B78130AD52DC71D95CAA"
 APP_PACKAGE_ID = "com.interrait.mymazda"
-USER_AGENT_BASE_API = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1. 15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1"
-USER_AGENT_USHER_API = 'MyMazda/9.0.2'
+USER_AGENT_BASE_API = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Mobile/15E148 Safari/604.1"
+USER_AGENT_USHER_API = 'MyMazda/10.0.0'
 APP_OS = "IOS"
-APP_VERSION = "9.0.2"
+APP_VERSION = "10.0.0"
 USHER_SDK_VERSION = "11.3.0930"
 
 MAX_RETRIES = 4
