@@ -51,10 +51,6 @@ PLATFORMS = [
 ]
 
 
-async def with_timeout(task, timeout_seconds=30):
-    """Run an async task with a timeout."""
-    async with asyncio.timeout(timeout_seconds):
-        return await task
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -118,7 +114,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             latitude = service_call.data["latitude"]
             longitude = service_call.data["longitude"]
             poi_name = service_call.data["poi_name"]
-            await with_timeout(api_method(vehicle_id, latitude, longitude, poi_name))
+            await api_method(vehicle_id, latitude, longitude, poi_name)
         except Exception as ex:
             raise HomeAssistantError(ex) from ex
 
@@ -151,22 +147,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     async def async_update_data():
         """Fetch data from Mazda API."""
         try:
-            vehicles = await with_timeout(mazda_client.get_vehicles())
+            vehicles = await mazda_client.get_vehicles()
 
             # The Mazda API can throw an error when multiple simultaneous requests are
             # made for the same account, so we can only make one request at a time here
             for vehicle in vehicles:
-                vehicle["status"] = await with_timeout(
-                    mazda_client.get_vehicle_status(vehicle["id"])
+                vehicle["status"] = await mazda_client.get_vehicle_status(
+                    vehicle["id"]
                 )
 
                 # If vehicle is electric, get additional EV-specific status info
                 if vehicle["isElectric"]:
-                    vehicle["evStatus"] = await with_timeout(
-                        mazda_client.get_ev_vehicle_status(vehicle["id"])
+                    vehicle["evStatus"] = await mazda_client.get_ev_vehicle_status(
+                        vehicle["id"]
                     )
-                    vehicle["hvacSetting"] = await with_timeout(
-                        mazda_client.get_hvac_setting(vehicle["id"])
+                    vehicle["hvacSetting"] = await mazda_client.get_hvac_setting(
+                        vehicle["id"]
                     )
 
             hass.data[DOMAIN][entry.entry_id][DATA_VEHICLES] = vehicles
